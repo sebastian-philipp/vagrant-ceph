@@ -408,6 +408,52 @@ openSUSE-42.1:
         - systemctl enable salt-master
 
 ########################################
+# OpenSUSE Leap 42.1
+########################################
+opensuse/openSUSE-42.1-x86_64:
+  salt:
+    repos:
+      'sle-sdk': 'http://192.168.10.95/repo/products/sle-sdk-12-SP1/product'
+      'sle-sdk update': 'http://192.168.10.95/repo/updates/sle-sdk-12-SP1/update'
+      'SLE 12 SP1': 'http://192.168.10.95/repo/products/SLE_12-SP1/product'
+      'SLE 12 SP1 update': 'http://192.168.10.95/repo/updates/SLE_12-SP1/update'
+      'SES-image': 'http://192.168.10.95/repo/products/ses-2.1-image/SUSE-Enterprise-Storage-2.1-POOL-x86_64-Build0012-Media1'
+      'SES': 'http://192.168.10.95/repo/products/ses-2.1/standard'
+      'System Management': 'http://192.168.10.95/repo/systemsmanagement:/saltstack/SLE_12'
+    packages:
+      all:
+        - vim
+        - vim-data
+        - salt-minion
+          #- diamond
+      admin:
+        - ceph-deploy
+        - git
+        - salt-master
+      client1:
+        - multipath-tools
+      client2:
+        - multipath-tools
+    files:
+      all: true
+      admin: true
+    commands:
+      admin:
+        - zypper -n in -t pattern Basis-Devel
+        - zypper -n in python-devel libgit2-devel
+        - /srv/reactor/ready_check --init
+        - systemctl start salt-master
+        - systemctl enable salt-master
+        - /usr/local/sbin/start_minions
+        - sleep 10
+        - salt-key -y -A  || exit 0
+        - git clone https://github.com/saltstack/salt.git || exit 0
+      calmari:
+        - systemctl start salt-master
+        - systemctl enable salt-master
+
+
+########################################
 # SLE 12 SP1
 ########################################
 SLE_12-SP1:
