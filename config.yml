@@ -636,25 +636,25 @@ small:
   description: "admin, 1 monitor, 3 data nodes"
   nodes:
     admin:
-      management: 192.168.1.254
-      public:  172.16.1.254
-      cluster: 172.16.2.254
+      management: 192.168.2.254
+      public:     192.168.3.254
+      cluster:    192.168.4.254
     mon1:
-      management: 192.168.1.11
-      public:  172.16.1.11
-      cluster: 172.16.2.11
+      management: 192.168.2.11
+      public:     192.168.3.11
+      cluster:    192.168.4.11
     data1:
-      management: 192.168.1.21
-      public:  172.16.1.21
-      cluster: 172.16.2.21
+      management: 192.168.2.21
+      public:     192.168.3.21
+      cluster:    192.168.4.21
     data2:
-      management: 192.168.1.22
-      public:  172.16.1.22
-      cluster: 172.16.2.22
+      management: 192.168.2.22
+      public:     192.168.3.22
+      cluster:    192.168.4.22
     data3:
-      management: 192.168.1.23
-      public:  172.16.1.23
-      cluster: 172.16.2.23
+      management: 192.168.2.23
+      public:     192.168.3.23
+      cluster:    192.168.4.23
   memory:
     admin: 1024
   disks:
@@ -664,6 +664,7 @@ small:
       hds: 2
     data3:
       hds: 2
+
 iscsi:
   description: "admin, 2 clients, 3 monitors, 5 data nodes, 3 gateways, 2 mds and calamari"
   nodes:
