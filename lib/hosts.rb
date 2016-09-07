@@ -15,48 +15,45 @@ module Vagrant
             @selected = selected
             @domain = domain
             @aliases = aliases
-            unless File.exists?('hosts')
-                File.open('hosts', 'w') do |file|
-                    static_header(file)
-                    entries = reorganize
-                    entries.keys.each do |section|
-                        entries[section].each do |entry|
-                            file.puts entry
-                        end
-                        file.puts
-                    end
+
+            File.open('hosts', 'w') do |file|
+                static_header(file)
+                entries = reorganize
+                entries.keys.each do |section|
+                    entries[section].each do |entry|
+                        file.puts entry
+                    end``
+                    file.puts
                 end
             end
         end
 
         # Produces the header portion of the hosts file
         def static_header(file)
-            file.puts <<-END.gsub(/^ {8}/, '')
-        #
-        # hosts         This file describes a number of hostname-to-address
-        #               mappings for the TCP/IP subsystem.  It is mostly
-        #               used at boot time, when no name servers are running.
-        #               On small systems, this file can be used instead of a
-        #               "named" name server.
-        # Syntax:
-        #    
-        # IP-Address  Full-Qualified-Hostname  Short-Hostname
-        #
+            file.puts <<-END.gsub(/^ +/, '')
+                #
+                # hosts         This file describes a number of hostname-to-address
+                #               mappings for the TCP/IP subsystem.  It is mostly
+                #               used at boot time, when no name servers are running.
+                #               On small systems, this file can be used instead of a
+                #               "named" name server.
+                # Syntax:
+                #
+                # IP-Address  Full-Qualified-Hostname  Short-Hostname
+                #
 
-        127.0.0.1       localhost
+                127.0.0.1       localhost
 
-        # special IPv6 addresses
-        ::1             localhost ipv6-localhost ipv6-loopback
+                # special IPv6 addresses
+                ::1             localhost ipv6-localhost ipv6-loopback
 
-        fe00::0         ipv6-localnet
+                fe00::0         ipv6-localnet
 
-        ff00::0         ipv6-mcastprefix
-        ff02::1         ipv6-allnodes
-        ff02::2         ipv6-allrouters
-        ff02::3         ipv6-allhosts
-
+                ff00::0         ipv6-mcastprefix
+                ff02::1         ipv6-allnodes
+                ff02::2         ipv6-allrouters
+                ff02::3         ipv6-allhosts
             END
-
         end
 
         # Creates entries with address and hostname-networkname.  Sorts by
