@@ -14,8 +14,7 @@ module Vagrant
         def initialize(node, repos)
             @node = node
             @cmds = []
-            repos = {} unless repos
-            repos.keys.each do |repo|
+            (repos or {}).keys.each do |repo|
                 # Use shell short circuit to determine if repo already exists
                 @cmds << "zypper lr \'#{repo}\' | grep -sq ^Name || zypper ar \'#{repos[repo]}\' \'#{repo}\'"
             end
@@ -23,7 +22,9 @@ module Vagrant
 
         # Runs all the commands in a single shell
         def add
-            @node.vm.provision 'shell', inline: @cmds.join('; ')
+            unless @cmds.empty?
+                @node.vm.provision 'shell', inline: @cmds.join('; ')
+            end
         end
     end
 
@@ -38,6 +39,7 @@ module Vagrant
             @node = node
             @host = host
             @packages = packages
+            @zypper_install = 'zypper --gpg-auto-import-keys -n --quiet in %s'
         end
 
         # Install packages for destined for all hosts and this host specifically
@@ -48,14 +50,16 @@ module Vagrant
 
         # Runs necessary zypper command, automatically trust repo
         def install_all
-            cmd = "zypper --gpg-auto-import-keys -n in #{@packages['all'].join(' ')}"
-            @node.vm.provision 'shell', inline: cmd
+            unless @packages['all'].nil?
+                cmd = @zypper_install % @packages['all'].join(' ')
+                @node.vm.provision 'shell', inline: cmd
+            end
         end
 
         # Runs necessary zypper command, automatically trust repo
         def install_host
             unless @packages[@host].nil?
-                cmd = "zypper --gpg-auto-import-keys -n in #{@packages[@host].join(' ')}"
+                cmd = @zypper_install % @packages[@host].join(' ')
                 @node.vm.provision 'shell', inline: cmd
             end
         end
@@ -80,12 +84,12 @@ module Vagrant
             ['files/id_ecdsa', 'files/id_ecdsa.pub'].each do |file|
                 @node.vm.provision 'file', source: file, destination: "/home/vagrant/#{File.basename(file)}"
             end
-            steps = <<-END.gsub(/^ {8}/, '')
-        mkdir -p /root/.ssh
-        mv /home/vagrant/id_ecdsa /root/.ssh
-        mv /home/vagrant/id_ecdsa.pub /root/.ssh
-        cp /root/.ssh/id_ecdsa.pub /root/.ssh/authorized_keys
-        chmod 0600 /root/.ssh/id_ecdsa
+            steps = <<-END.gsub(/^ +/, '')
+                mkdir -p /root/.ssh
+                mv /home/vagrant/id_ecdsa /root/.ssh
+                mv /home/vagrant/id_ecdsa.pub /root/.ssh
+                cp /root/.ssh/id_ecdsa.pub /root/.ssh/authorized_keys
+                chmod 0600 /root/.ssh/id_ecdsa
             END
             @node.vm.provision 'shell', inline: steps
         end
@@ -128,8 +132,7 @@ module Vagrant
                         if @files[subdir]
                             tar_file = tar(subdir)
                             vm_tar_file = "/home/vagrant/#{File.basename(tar_file)}"
-                            @node.vm.provision 'file', source: tar_file,
-                                               destination: vm_tar_file
+                            @node.vm.provision 'file', source: tar_file, destination: vm_tar_file
                             untar(vm_tar_file)
                         end
                     end
