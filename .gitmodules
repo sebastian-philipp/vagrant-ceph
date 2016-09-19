@@ -1,0 +1,4 @@
+[submodule "files/salt/all/tmp/python-ceph-cfg"]
+	path = files/salt/all/tmp/python-ceph-cfg
+	url = https://github.com/oms4suse/python-ceph-cfg.git
+	branch = master
