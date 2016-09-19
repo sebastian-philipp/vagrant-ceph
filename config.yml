@@ -443,7 +443,7 @@ opensuse/openSUSE-42.1-x86_64:
         - sleep 10
         - salt-key -y -A  || exit 0
         - git clone https://github.com/saltstack/salt.git || exit 0
-        - bash install_openattic.sh
+        - bash openattic/vagrant/install.sh
       calmari:
         - systemctl start salt-master
         - systemctl enable salt-master
