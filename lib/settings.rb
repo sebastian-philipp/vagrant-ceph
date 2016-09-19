@@ -9,9 +9,9 @@ def common_settings(node, config, name)
 
     # Ceph has three networks
     networks = config[CONFIGURATION]['nodes'][name]
-    node.vm.network :private_network, ip: networks['management']
-    node.vm.network :private_network, ip: networks['public']
-    node.vm.network :private_network, ip: networks['cluster']
+    networks.values.each do |ip|
+        node.vm.network :private_network, ip: ip
+    end
 end
 
 def libvirt_settings(provider, config, name)
@@ -83,9 +83,19 @@ def virtbox_settings(provider, config, name)
             disks = config[CONFIGURATION]['disks'][name]
             FileUtils.mkdir_p("#{Dir.home}/disks")
             unless disks['hds'].nil?
+                # Assume that we need to create the SCSI Controller if the disk does not yet exist. There doesn't seem
+                # to exist a better solution and it looks like it's not planed to create one.
+                # https://github.com/mitchellh/vagrant/issues/4015#issuecomment-131440075
+                unless File.exists?("#{Dir.home}/disks/#{name}-1.vdi")
+                    provider.customize ['storagectl', :id, '--name', 'SCSI Controller', '--add', 'scsi']
+                end
+
                 (1..disks['hds']).each do |d|
                     file = "#{Dir.home}/disks/#{name}-#{d}"
-                    provider.customize ['createhd', '--filename', file, '--size', '1100']
+
+                    unless File.exist?("#{file}.vdi")
+                        provider.customize ['createhd', '--filename', file, '--size', '1100']
+                    end
                     provider.customize ['storageattach', :id, '--storagectl', 'SCSI Controller',
                                         '--port', d,
                                         '--device', 0,
