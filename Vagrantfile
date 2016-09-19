@@ -61,6 +61,10 @@ def provisioning(hosts, node, yml_config, name)
     keys = Vagrant::Keys.new(node, yml_config[CONFIGURATION]['nodes'].keys)
     keys.authorize if name == 'admin'
 
+    # Add shares
+    shares = Vagrant::Shares.new(node, name, yml_config[BOX][INSTALLATION]['shares'])
+    shares.configure
+
     # Add missing repos
     repos = Vagrant::Repos.new(node, yml_config[BOX][INSTALLATION]['repos'])
     repos.add

@@ -197,4 +197,29 @@ module Vagrant
 
     end
 
+    class Shares
+
+        # Creates shares
+        #
+        #   node - vm provider
+        #   host - hostname
+        #   shares - hashmap of source -> target paths
+        def initialize(node, host,  shares)
+            @node = node
+            @host = host
+            @shares = shares
+        end
+
+        def configure
+            return unless @shares
+            ['all', @host].each do |group|
+                unless @shares[group].nil?
+                    @shares[group].each do |source, target|
+                        @node.vm.synced_folder source, target, type: 'nfs',
+                                               :mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
+                    end
+                end
+            end
+        end
+    end
 end
