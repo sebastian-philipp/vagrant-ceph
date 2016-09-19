@@ -121,8 +121,8 @@ then
     OA_PACKAGES="$OA_PACKAGES
 module-icinga"
     ZYP_PACKAGES="$(echo -e "$OA_PACKAGES" | xargs -I SUB echo openattic-SUB)"
-    DEPS="$(zypper --non-interactive install  --dry-run $ZYP_PACKAGES | grep -A 1 'NEW packages are going to be installed' | tail -n 1)"
-    zypper --non-interactive install $(echo $DEPS | tr " " "\n" | grep -v -e openattic -e apache -e python)
+    DEPS="$(zypper --quiet --non-interactive install --dry-run $ZYP_PACKAGES | grep -A 1 'NEW packages are going to be installed' | tail -n 1)"
+    zypper --non-interactive --quiet install $(echo $DEPS | tr " " "\n" | grep -v -e openattic -e apache -e python)
 
     ln -s /home/vagrant/openattic/rpm/sysconfig/openattic.SUSE /etc/sysconfig/openattic
     ln -s /home/vagrant/openattic/etc/nagios3/conf.d/openattic_static.cfg /etc/icinga/conf.d/openattic_static.cfg

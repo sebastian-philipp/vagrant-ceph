@@ -9,9 +9,7 @@ def common_settings(node, config, name)
 
     # Ceph has three networks
     networks = config[CONFIGURATION]['nodes'][name]
-    networks.values.each do |ip|
-        node.vm.network :private_network, ip: ip
-    end
+    networks.values.each { |ip| node.vm.network :private_network, ip: ip }
 end
 
 def libvirt_settings(provider, config, name)
