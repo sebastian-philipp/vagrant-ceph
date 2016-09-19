@@ -411,25 +411,19 @@ openSUSE-42.1:
 # OpenSUSE Leap 42.1
 ########################################
 opensuse/openSUSE-42.1-x86_64:
-  salt:
+  openattic: &openattic
     repos:
-      'sle-sdk': 'http://192.168.10.95/repo/products/sle-sdk-12-SP1/product'
-      'sle-sdk update': 'http://192.168.10.95/repo/updates/sle-sdk-12-SP1/update'
-      'SLE 12 SP1': 'http://192.168.10.95/repo/products/SLE_12-SP1/product'
-      'SLE 12 SP1 update': 'http://192.168.10.95/repo/updates/SLE_12-SP1/update'
-      'SES-image': 'http://192.168.10.95/repo/products/ses-2.1-image/SUSE-Enterprise-Storage-2.1-POOL-x86_64-Build0012-Media1'
-      'SES': 'http://192.168.10.95/repo/products/ses-2.1/standard'
-      'System Management': 'http://192.168.10.95/repo/systemsmanagement:/saltstack/SLE_12'
+      'openATTIC': 'http://download.opensuse.org/repositories/filesystems:openATTIC/openSUSE_Leap_42.1/'
     packages:
       all:
         - vim
         - vim-data
         - salt-minion
-          #- diamond
       admin:
         - ceph-deploy
         - git
         - salt-master
+        - openattic
       client1:
         - multipath-tools
       client2:
@@ -439,18 +433,20 @@ opensuse/openSUSE-42.1-x86_64:
       admin: true
     commands:
       admin:
-        - zypper -n in -t pattern Basis-Devel
-        - zypper -n in python-devel libgit2-devel
-        - /srv/reactor/ready_check --init
+#        - zypper -n in -t pattern Basis-Devel
+        - zypper -n --quiet in python-devel libgit2-devel
+#        - /srv/reactor/ready_check --init
         - systemctl start salt-master
         - systemctl enable salt-master
-        - /usr/local/sbin/start_minions
+#        - /usr/local/sbin/start_minions
         - sleep 10
         - salt-key -y -A  || exit 0
         - git clone https://github.com/saltstack/salt.git || exit 0
+        - bash install_openattic.sh
       calmari:
         - systemctl start salt-master
         - systemctl enable salt-master
+  salt: *openattic
 
 
 ########################################
@@ -658,6 +654,8 @@ small:
   memory:
     admin: 1024
   disks:
+    admin:
+      hds: 2
     data1:
       hds: 2
     data2:
