@@ -413,7 +413,7 @@ openSUSE-42.1:
 opensuse/openSUSE-42.1-x86_64:
   openattic: &openattic
     repos:
-      'openATTIC': 'http://download.opensuse.org/repositories/filesystems:openATTIC/openSUSE_Leap_42.1/'
+#      'openATTIC': 'http://download.opensuse.org/repositories/filesystems:openATTIC/openSUSE_Leap_42.1/'
     packages:
       all:
         - vim
@@ -423,7 +423,7 @@ opensuse/openSUSE-42.1-x86_64:
         - ceph-deploy
         - git
         - salt-master
-        - openattic
+#        - openattic
       client1:
         - multipath-tools
       client2:
@@ -433,6 +433,7 @@ opensuse/openSUSE-42.1-x86_64:
       admin: true
     commands:
       admin:
+        - chmod 1777 /tmp
 #        - zypper -n in -t pattern Basis-Devel
         - zypper -n --quiet in python-devel libgit2-devel
 #        - /srv/reactor/ready_check --init
@@ -446,6 +447,9 @@ opensuse/openSUSE-42.1-x86_64:
       calmari:
         - systemctl start salt-master
         - systemctl enable salt-master
+    shares:
+      admin:
+        /home/user/src/openattic: /home/vagrant/openattic # local openATTIc path - target on the VM
   salt: *openattic
 
 
@@ -550,8 +554,8 @@ SLE_12-SP1:
 ########################################
 #
 # The default allows for reasonable exploration of Ceph installations and
-# configurations.  Three monitors allow for a quorum and understanding failover,
-# elections, etc.  Six data nodes with 30 osds and a pretend journal give
+# configurations. Three monitors allow for a quorum and understanding failover,
+# elections, etc. Six data nodes with 30 osds and a pretend journal give
 # enough flexibility to try replicas and erasure coding (e.g. k=3, m=2) while
 # downing an osd or an entire node.
 #
