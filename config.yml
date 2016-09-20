@@ -414,11 +414,13 @@ opensuse/openSUSE-42.1-x86_64:
   openattic: &openattic
     repos:
 #      'openATTIC': 'http://download.opensuse.org/repositories/filesystems:openATTIC/openSUSE_Leap_42.1/'
+       'deapsea': 'http://download.opensuse.org/repositories/home:swiftgist/openSUSE_Leap_42.1/'
     packages:
       all:
         - vim
         - vim-data
         - salt-minion
+        - deepsea
       admin:
         - ceph-deploy
         - git
