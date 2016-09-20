@@ -31,7 +31,7 @@ BOX = 'opensuse/openSUSE-42.1-x86_64'
 INSTALLATION = 'salt'
 
 # Set CONFIGURATION to one of 'default', 'small', 'iscsi' or 'economical'
-CONFIGURATION = 'small'
+CONFIGURATION = 'tiny'
 
 raise "Box #{BOX} missing from config.yml" unless yml_config[BOX]
 raise "Installation #{INSTALLATION} missing for box #{BOX} from config.yml" unless yml_config[BOX][INSTALLATION]
