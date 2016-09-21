@@ -431,8 +431,8 @@ opensuse/openSUSE-42.1-x86_64:
       client2:
         - multipath-tools
     files:
-      all: true
-      admin: true
+      all: false
+      admin: false
     commands:
       admin:
         - chmod 1777 /tmp
@@ -446,6 +446,8 @@ opensuse/openSUSE-42.1-x86_64:
         - salt-key -y -A  || exit 0
         - git clone https://github.com/saltstack/salt.git || exit 0
         - bash openattic/vagrant/install.sh
+      #all:
+      #  - (cd /tmp/python-ceph-cfg; python setup.py install)
       calmari:
         - systemctl start salt-master
         - systemctl enable salt-master
