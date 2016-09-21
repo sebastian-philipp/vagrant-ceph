@@ -671,6 +671,29 @@ small:
     data3:
       hds: 2
 
+tiny:
+  description: "admin, 1 monitor, 1 data nodes"
+  nodes:
+    admin:
+      management: 192.168.2.254
+      public:     192.168.3.254
+      cluster:    192.168.4.254
+    mon1:
+      management: 192.168.2.11
+      public:     192.168.3.11
+      cluster:    192.168.4.11
+    data1:
+      management: 192.168.2.21
+      public:     192.168.3.21
+      cluster:    192.168.4.21
+  memory:
+    admin: 1024
+  disks:
+    admin:
+      hds: 2
+    data1:
+      hds: 2
+
 iscsi:
   description: "admin, 2 clients, 3 monitors, 5 data nodes, 3 gateways, 2 mds and calamari"
   nodes:
